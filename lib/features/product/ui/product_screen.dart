@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:bloc_test/core/code_getter_extension.dart';
 import 'package:bloc_test/features/home/bloc/home_bloc.dart';
 import 'package:bloc_test/features/product/bloc/product_bloc.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,10 @@ class ProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProductBloc(),
+      create: (context) {
+        print('Create ProductBloc');
+        return ProductBloc()..addLoad((code) => ProductEvent.load(id: code));
+      },
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Product'),
@@ -35,6 +39,15 @@ class ProductView extends StatelessWidget {
                 .read<ProductBloc>()
                 .add(const ProductEvent.load(id: 'nice_id')),
             child: const Text('Load Product!')),
+        ElevatedButton(
+            onPressed: () => context
+                .read<ProductBloc>()
+                .addLoad((code) => ProductEvent.load(id: code)),
+            child: const Text('Load Product extension!')),
+        ElevatedButton(
+            onPressed: () =>
+                context.read<HomeBloc>().add(const HomeEvent.doSomething()),
+            child: const Text('Load Home!')),
         BlocBuilder<HomeBloc, HomeState>(
             builder: (builder, state) => state.maybeWhen(
                 loaded: (data) => Text('From HomeBloc: $data'),

@@ -15,7 +15,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeEvent>((event, emit) async {
       await event.when(doSomething: () async {
         String rnd = await Future<String>.delayed(
-            const Duration(seconds: 2), () => generateRandomString(8));
+            const Duration(milliseconds: 100), () => generateRandomString(8));
         emit(HomeState.loaded(something: rnd));
       });
     });
