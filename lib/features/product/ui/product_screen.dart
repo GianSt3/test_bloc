@@ -1,5 +1,7 @@
 import 'package:auto_route/annotations.dart';
+import 'package:bloc_test/features/product/bloc/product_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class ProductScreen extends StatelessWidget {
@@ -7,11 +9,14 @@ class ProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Product'),
+    return BlocProvider(
+      create: (context) => ProductBloc(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Product'),
+        ),
+        body: const SafeArea(child: ProductView()),
       ),
-      body: const SafeArea(child: ProductView()),
     );
   }
 }
@@ -21,6 +26,19 @@ class ProductView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text('Product');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ElevatedButton(
+            onPressed: () => context
+                .read<ProductBloc>()
+                .add(const ProductEvent.doSomething()),
+            child: const Text('Load Product!')),
+        BlocBuilder<ProductBloc, ProductState>(
+            builder: (builder, state) => state.maybeWhen(
+                loaded: (data) => Text('From ProductBloc: $data'),
+                orElse: () => const Text('empty')))
+      ],
+    );
   }
 }
