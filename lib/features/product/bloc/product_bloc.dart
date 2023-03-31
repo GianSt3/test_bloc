@@ -13,7 +13,8 @@ part 'product_state.dart';
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc() : super(const ProductState.initial()) {
     on<ProductEvent>((event, emit) async {
-      await event.when(doSomething: () async {
+      await event.when(load: (data) async {
+        print(data);
         String rnd = await Future<String>.delayed(
             const Duration(seconds: 2), () => generateRandomString(8));
         emit(ProductState.loaded(something: rnd));

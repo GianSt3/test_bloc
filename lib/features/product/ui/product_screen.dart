@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:bloc_test/features/home/bloc/home_bloc.dart';
 import 'package:bloc_test/features/product/bloc/product_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,8 +33,12 @@ class ProductView extends StatelessWidget {
         ElevatedButton(
             onPressed: () => context
                 .read<ProductBloc>()
-                .add(const ProductEvent.doSomething()),
+                .add(const ProductEvent.load(id: 'nice_id')),
             child: const Text('Load Product!')),
+        BlocBuilder<HomeBloc, HomeState>(
+            builder: (builder, state) => state.maybeWhen(
+                loaded: (data) => Text('From HomeBloc: $data'),
+                orElse: () => const Text('empty'))),
         BlocBuilder<ProductBloc, ProductState>(
             builder: (builder, state) => state.maybeWhen(
                 loaded: (data) => Text('From ProductBloc: $data'),

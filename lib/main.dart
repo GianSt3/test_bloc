@@ -1,10 +1,14 @@
+import 'package:bloc_test/app/bloc/log_bloc_observer.dart';
 import 'package:bloc_test/app/router/app_router.dart';
 import 'package:bloc_test/features/home/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(MyApp());
+  BlocOverrides.runZoned(
+    () => runApp(MyApp()),
+    blocObserver: LogBlocObserver(),
+  );
 }
 
 class MyApp extends StatelessWidget {
